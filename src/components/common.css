@@ -1,0 +1,46 @@
+/* 授权弹出框 */
+.modal2{
+    width: 270px;
+    text-align: center;
+}
+.popup-class{
+    border-radius: 10px;
+}
+.reg-title{
+  font-size: 15px;
+  color: #333;
+  padding-top: 30px;
+  font-weight: bold;
+}
+.reg-text{
+  color: #999;
+  font-size: 12px;
+  padding: 10px 30px 20px 30px;
+}
+.modal-btns{
+  display: flex;
+  border-top: 1px solid #cecece;
+}
+.modal-cancel-btn{
+  color: #999;
+  height: 40px;
+  width: 50%;
+  line-height: 40px;
+  text-align: center;
+  border-right: 1px solid #d8d8d8;
+
+}
+button::after {
+  border: none;
+}
+.reg-btn{
+  background: #fff;
+  font-size: 16px;
+  color: #FFD637;
+  height: 40px;
+  width: 50%;
+  line-height: 40px;
+  text-align: center;
+}
+
+/* 授权弹出框END */

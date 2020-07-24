@@ -1,0 +1,6 @@
+{
+    "usingComponents": {
+        "van-datetime-picker": "../../../static/vant/datetime-picker/index",
+        "van-popup": "../../../static/vant/popup/index"
+      }
+}

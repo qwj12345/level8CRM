@@ -1,0 +1,9 @@
+{
+    "usingComponents": {
+        "van-area": "../../../static/vant/area/index",
+        "van-checkbox": "../../../static/vant/checkbox/index",
+        "van-popup": "../../../static/vant/popup/index"
+      },
+      "navigationBarBackgroundColor": "#FFD637"
+    
+}

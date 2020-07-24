@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText":"报修登记",
+    "usingComponents": {
+        "van-popup": "../../../static/vant/popup/index"
+      }
+}

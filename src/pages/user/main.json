@@ -1,0 +1,6 @@
+{
+    "navigationBarBackgroundColor": "#FFD637",
+    "usingComponents": {
+        "van-popup": "../../../static/vant/popup/index"
+    }
+}

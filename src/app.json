@@ -1,0 +1,74 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/webpage/main",
+    "pages/conceal/main",
+    "pages/viprule/main",
+    "pages/giftInfo/main",
+    "pages/regis/main",
+    "pages/repair/main",
+    "pages/repairRule/main",
+    "pages/complement/main",
+    "pages/complementRule/main",
+    "pages/logistics/main",
+    "pages/lottery/main",
+    "pages/joinChat/main",
+    "pages/lotteryRule/main",
+    "pages/newmsg/main",
+    "pages/articledetail/main",
+    "pages/comingsoon/main",
+    "pages/integral/main",
+    "pages/record/main",
+    "pages/member/main",
+    "pages/warranty/main",
+    "pages/user/main",
+    "pages/myinfo/main",
+    "pages/report/main",
+    "pages/reportDetail/main",
+    "pages/products/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "LEVEL8福利社",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#fafafa",
+    "selectedColor": "#333",
+    "borderStyle": "white",
+    "list": [
+      {
+      "text": "首页",
+      "pagePath": "pages/index/main",
+      "iconPath":"./static/images/sy.png",
+      "selectedIconPath":"./static/images/s-sy.png"
+    }, 
+    {
+      "text": "会员福利",
+      "pagePath": "pages/member/main",
+      "iconPath":"./static/images/fl.png",
+      "selectedIconPath":"./static/images/s-fl.png"
+    }, 
+     {
+      "text": "产品注册",
+      "pagePath": "pages/report/main",
+      "iconPath":"./static/images/sw.png",
+      "selectedIconPath":"./static/images/s-sw.png"
+    },
+    {
+      "text": "我的",
+      "pagePath": "pages/user/main",
+      "iconPath":"./static/images/wd.png",
+      "selectedIconPath":"./static/images/s-wd.png"
+    }
+  ]
+  }, 
+  "plugins": {
+    "chatGroupPlugin": {
+        "version": "1.0.0",
+        "provider": "wxaae6519cee98d824"
+    }
+   }
+}

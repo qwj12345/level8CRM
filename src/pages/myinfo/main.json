@@ -1,0 +1,9 @@
+{
+    "navigationBarBackgroundColor": "#FFD637",
+    "navigationBarTitleText":"我的信息",
+    "usingComponents": {
+        "van-datetime-picker": "../../../static/vant/datetime-picker/index",
+        "van-popup": "../../../static/vant/popup/index",
+        "van-area": "../../../static/vant/area/index"
+      }
+}
