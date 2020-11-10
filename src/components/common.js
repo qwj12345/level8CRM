@@ -24,32 +24,28 @@ export function timeFormat1(nS,type) {
     else
         return `${M}/${D} ${H}:${minute}`; // mm-dd hh:minute
 }
-// 生成32位uuid
+// 生成32位uuid  
 export function wxuuid() {
     var s = [];
     var hexDigits = "0123456789abcdef";
   
     for (var i = 0; i < 36; i++) {
       s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-  
     }
 
-    s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+    s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010  
     s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
     s[8] = s[13] = s[18] = s[23] = "";
     var uuid = s.join("");
   
-    return uuid
-  
+    return uuid;
   }
 
 export function getToken(encryptedData,iv){
-
-        // -----------------获取token------------------
+        // -----------------获取token ------------------
         return new Promise(function(resolve,reject){
             wx.login({
                 success (res) {
-            
                     if (res.code) {
                         wx.request({
                             url: global.ip1+'miniProgram/api/get/crm/token', 
@@ -58,15 +54,14 @@ export function getToken(encryptedData,iv){
                                 iv: iv,
                                 code:res.code
                             },
-                            header: {
+                            header:{
                                 'content-type': 'application/json' // 默认值
                             },
                             success (res) {
-
                                 if(res.data.status === 0){
                                     wx.setStorageSync('token', res.data.token);
                                 }else{
-                                    console.log(9869,res.data);
+                                    console.log(989,res.data);
                                 }
                                 resolve(res)
                             }
@@ -77,23 +72,21 @@ export function getToken(encryptedData,iv){
         })
         // ------------------------------
           
-
 }
 export function saveUser(nickName,avatarUrl,sex){
     // -----------------传头像和名字------------------
     wx.request({
-        url: global.ip1+'miniProgram/api/user/basic/add/', //仅为示例，并非真实的接口地址
+        url: global.ip1+'miniProgram/api/user/basic/add/', //仅为示例，并非真实的接口地址  
         data: {
-        userName: nickName,
-        userImg: avatarUrl,
-        sex: sex,
-        token:wx.getStorageSync('token')
+            userName: nickName,
+            userImg: avatarUrl,
+            sex: sex,
+            token:wx.getStorageSync('token')
         },
         header: {
         'content-type': 'application/json' // 默认值
         },
         success (res) {
-           console.log(56,res)
             getApp().globalData.integralNum = res.data.integralNum;
         }
     })
@@ -116,8 +109,7 @@ export function wxRequest(url,config){
             header: {
                 'content-type': contentType
             },
-            success(res){
-              
+            success(res){ 
                 resolve(res)
             }
         })

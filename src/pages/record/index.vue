@@ -83,7 +83,7 @@
                 <!--  -->
                 <div class="paging" v-if="showGiftPage">
                     <div @click="prePageLP">上一页</div>
-                    <div @click="nextPageLP">下一页</div>
+                    <div @click="nextPageLP">下一页</div> 
                 </div>
             </div>
       </div>
@@ -117,9 +117,17 @@ export default {
                         url:"/pages/logistics/main?expressageNum="+item.expressageNum+"&expressCode="+item.expressCode
                     })
                 }else{
-                    wx.navigateTo({
-                        url:"/pages/giftInfo/main?exchangeInfo="+encodeURIComponent(item.exchangeInfo)+"&exchangeCode="+item.exchangeCode
-                    })
+                    console.log(item)
+                    if(item.trophyName==="酒店卡卷"){//劵
+                        wx.navigateTo({
+                            url:"/pages/ticketCode/main?id="+item.id
+                        })
+                    }else{
+                        wx.navigateTo({
+                            url:"/pages/giftInfo/main?exchangeInfo="+encodeURIComponent(item.exchangeInfo)+"&exchangeCode="+item.exchangeCode
+                        })
+                    }
+                    
                 }
             }
         },
@@ -164,7 +172,7 @@ export default {
                 }
                 this.recordsGift.forEach((item,key) => {
                     item.createTime = timeFormat1(item.createTime,0);
-                    if(item.exchangeInfo!=="" || item.expressageNum!==""){
+                    if(item.trophyStatus==="2"){
                         item.status = '已发货';
                     }else{
                         item.status = '未发货';

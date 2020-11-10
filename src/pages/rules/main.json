@@ -1,0 +1,9 @@
+{
+    "navigationBarTitleText":"会员手册",
+    "usingComponents": {
+        "van-tabs": "../../../static/vant/tabs/index",
+        "van-tab": "../../../static/vant/tab/index",
+        "van-collapse": "../../../static/vant/collapse/index",
+        "van-collapse-item": "../../../static/vant/collapse-item/index"
+      } 
+}

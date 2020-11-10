@@ -18,7 +18,6 @@
         <div class="modal-text">
           请仔细阅读以下协议<br/>如不同意相关协议内容，您可暂停授权
         </div>
-
         <!--  -->
         <div class="checks">
           <div class="check" @click="checkYS">
@@ -31,12 +30,12 @@
           <!-- <div class="check" @click="checkYS2">
             <icon class="margin-R margin-L" v-if="seliIcon2" type='success' size='14' color='#FFD637'/>
             <div v-if="!seliIcon2" class="no-sel-icon margin-R" ></div>
-            <div class="check-text">同意接收LEVEL8品牌的信息推送</div>
+            <div class="check-text">同意接收LEVEL8品牌的信息推送</div>   
           </div> -->
         </div>
         <!--  -->
         <button class="modal-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" :disabled='!selAll' >微信手机号快速登录</button>
-        <!-- <button class="modal-btn" open-type="getUserInfo" @getuserinfo="getUserInfo">微信手机号快速登录</button> -->
+        <!-- <button class="modal-btn" open-type="getUserInfo" @getuserinfo="getUserInfo">微信手机号快速登录</button>  -->
         <button class="modal-btn2" @click="refuseLog">暂不授权>></button>
       </div>
 
@@ -53,7 +52,6 @@ export default {
       checkedRule:true,
       seliIcon:true,
       seliIcon2:false,
-      
     }
   },
   computed: {
@@ -68,64 +66,62 @@ export default {
   props: ['showModal'],
   methods: {
     getPhoneNumber (e) {
-      console.log(getApp().globalData.invitationCode)
       let that = this;
       if(e.mp.detail.errMsg === 'getPhoneNumber:ok'){
         getApp().globalData.phone = 1;
+        wx.login({
+        success (res) {
+          if (res.code) {
+            wx.request({
+              url: global.ip1+'miniProgram/api/crm/user/login', //login接口需要用到授权手机号获取的encryptedData和iv
+              data: {
+                encryptedData: e.mp.detail.encryptedData,
+                iv: e.mp.detail.iv,
+                code:res.code,
+                invitationCode:getApp().globalData.invitationCode===undefined?"":getApp().globalData.invitationCode
+              },
+              header: {
+                'content-type': 'application/json' // 默认值
+              },
+              success (res) { 
+                if(res.data.status == 0){
+                  wx.showLoading({
+                    title: '请稍后',
+                  })
+                  wx.getUserInfo({
+                    success: function(e) {//用户已授权
+                      getToken(e.encryptedData,e.iv).then(res => {
+                        let data = {
+                          token:res.data.token
+                        }
+                        wxRequest('/miniProgram/api/user/info',{data:data}).then(res => {
+                          wx.hideLoading();
+                          wx.showToast({
+                            title: '授权成功',
+                            icon: 'success',
+                            duration: 1000
+                          })
+                          that.$emit('modalShow', {showModal:false});
+                          getApp().globalData.integralNum = this.integralNum;
+                          getApp().globalData.isQrcodeCheckUser = res.data.data.isQrcodeCheckUser;
+                        })
+                        // 存储头像和姓名  
+                        saveUser(e.userInfo.nickName,e.userInfo.avatarUrl,e.userInfo.gender);
+                      });
+                    }
+                  })
 
-      wx.login({
-      success (res) {
-
-        if (res.code) {
-          wx.request({
-            url: global.ip1+'miniProgram/api/crm/user/login', //
-            data: {
-              encryptedData: e.mp.detail.encryptedData,
-              iv: e.mp.detail.iv,
-              code:res.code,
-              invitationCode:getApp().globalData.invitationCode===undefined?"":getApp().globalData.invitationCode
-            },
-            header: {
-              'content-type': 'application/json' // 默认值
-            },
-            success (res) {
-              console.log('phone',res.data)
-              if(res.data.status == 0){
-                that.showModal = false; 
-                wx.showToast({
-                  title: '授权成功',
-                  icon: 'success',
-                  duration: 1000
-                })
-
-                wx.getUserInfo({
-                  success: function(e) {//用户已授权
-                  console.log(996,e)
-                    getToken(e.encryptedData,e.iv).then(res => {
-                      let data = {
-                        token:res.data.token
-                      }
-                      wxRequest('/miniProgram/api/user/info',{data:data}).then(res => {
-                        that.$emit('modalShow', {showModal:that.showModal});
-                        getApp().globalData.integralNum = this.integralNum;
-                      })
-                      // 存储头像和姓名
-                      saveUser(e.userInfo.nickName,e.userInfo.avatarUrl,e.userInfo.gender);
-                    });
-                  }
-                })
-
-              }else{
-                wx.showToast({
-                  title: '授权失败',
-                  image: '/static/images/errorToast.png',
-                  duration: 1000
-                })
+                }else{
+                  wx.showToast({
+                    title: '授权失败',
+                    image: '/static/images/errorToast.png',
+                    duration: 1000
+                  })
+                }
               }
-            }
+            })
+            }}
           })
-          }}
-        })
 
       }else{
         getApp().globalData.phone = 0;

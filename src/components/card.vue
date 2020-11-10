@@ -43,8 +43,7 @@ import {wxRequest} from '@/components/common';
 export default {
   data(){
     return{
-      grade:0,
-      grades:["新","银","金","铂","钻","黑"],
+      grade:0, 
       vipIcon:""
     }
   },
@@ -102,6 +101,7 @@ export default {
     left:0;
     z-index: 0;
   }
+  
   .header-user{
     position: relative;
     display: flex;

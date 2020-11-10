@@ -5,6 +5,10 @@
     "pages/conceal/main",
     "pages/viprule/main",
     "pages/giftInfo/main",
+    "pages/tickets/main",
+    "pages/ticketCode/main",
+    "pages/ticketDetail/main",
+    "pages/ticketsList/main",
     "pages/regis/main",
     "pages/repair/main",
     "pages/repairRule/main",
@@ -18,7 +22,14 @@
     "pages/articledetail/main",
     "pages/comingsoon/main",
     "pages/integral/main",
+    "pages/verification/main",
+    "pages/coderecord/main",
+    "pages/casino/main",
+    "pages/casinoDetail/main",
+    "pages/inviteList/main",
+    "pages/inviteGiftList/main",
     "pages/record/main",
+    "pages/rules/main",
     "pages/member/main",
     "pages/warranty/main",
     "pages/user/main",
@@ -34,6 +45,7 @@
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
+    "custom": true,
     "color": "#999",
     "backgroundColor": "#fafafa",
     "selectedColor": "#333",
@@ -65,6 +77,10 @@
     }
   ]
   }, 
+  "usingComponents": {},
+  "navigateToMiniProgramAppIdList":[
+    "wx80a0130b2422a4db"
+  ],
   "plugins": {
     "chatGroupPlugin": {
         "version": "1.0.0",

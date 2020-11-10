@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText":"自助餐详情",
+    "usingComponents": {
+        "van-popup": "../../../static/vant/popup/index"
+        }
+}

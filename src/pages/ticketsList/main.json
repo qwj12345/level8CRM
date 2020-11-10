@@ -1,0 +1,9 @@
+{
+    "backgroundColor": "#ffd637",
+    "navigationBarBackgroundColor": "#FFD637",
+    "navigationBarTitleText":"我的订单",
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+        "van-popup": "../../../static/vant/popup/index"
+      }
+}

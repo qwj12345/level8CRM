@@ -80,7 +80,7 @@
 
     </div>
     <!--  -->
-    <div class="report-btn" @click="reportRepair">
+    <div class="report-btn" style="margin-bottom:20px" @click="reportRepair">
         提交
     </div>
     <!--  -->

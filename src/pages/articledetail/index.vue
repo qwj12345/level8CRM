@@ -1,6 +1,6 @@
 <template>
   <div>
-      <web-view v-if="showWeb" :src="url"></web-view>
+      <web-view v-if="showWeb" :src="url" ></web-view>
       <div v-if="!showWeb" v-html="articleHtml">
           {{articleHtml}}
       </div>
@@ -19,8 +19,8 @@ export default {
             articleHtml:''
         }
     },
-    onShareAppMessage(res) {
-        //转发时携带 shareTicket才能在回调中获取到shareTickets
+    onShareAppMessage(res) {   
+        //转发时携带 shareTicket才能在回调中获取到shareTickets 
         wx.showShareMenu({
             withShareTicket: true
         }) 
@@ -33,8 +33,8 @@ export default {
         }
         // 
         let data = {
-                token:wx.getStorageSync('token'),
-                id:this.id
+            token:wx.getStorageSync('token'),
+            id:this.id
         }
         // 转发任务
         wxRequest('/miniProgram/api/notification/forwarding',{data:data}).then(res => {
@@ -47,7 +47,6 @@ export default {
     },
     
     onLoad(query){
-        
         this.url = decodeURIComponent(query.url);
         this.id = query.id;
 

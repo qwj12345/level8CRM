@@ -27,7 +27,7 @@
 	"projectname": "level8_3",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"libVersion": "2.7.2",
+	"libVersion": "2.12.2",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -54,22 +54,22 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/viprule/main",
-					"pathName": "pages/viprule/main",
+					"name": "pages/rules/main",
+					"pathName": "pages/rules/main",
 					"query": "",
 					"scene": 1047
 				},
 				{
 					"id": 1,
-					"name": "pages/complement/main",
-					"pathName": "pages/complement/main",
+					"name": "pages/integral/main",
+					"pathName": "pages/integral/main",
 					"query": "",
 					"scene": null
 				},
 				{
 					"id": 2,
-					"name": "pages/lottery/main",
-					"pathName": "pages/lottery/main",
+					"name": "pages/coderecord/main",
+					"pathName": "pages/coderecord/main",
 					"query": "",
 					"scene": null
 				}

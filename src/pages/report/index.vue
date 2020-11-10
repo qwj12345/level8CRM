@@ -121,6 +121,7 @@ export default {
                 }
                 wxRequest('/miniProgram/api/user/info',{data:data}).then(res => {
                 this.integralNum = res.data.data.integralNum;
+                getApp().globalData.isQrcodeCheckUser = res.data.data.isQrcodeCheckUser;
                 })
                 // 存储头像和姓名
                 saveUser(rawData.nickName,rawData.avatarUrl,rawData.gender)
@@ -315,22 +316,20 @@ export default {
     },
     onLoad (query) {
         let that = this;
-
-        console.log('query',query)
         this.uid = query.scene;
         console.log('scene',decodeURIComponent(query.scene))
         //----------登录----------------
-            wx.getUserInfo({
-                success: function(res) {
-                    console.log(res)
-                    getApp().globalData.login = 1
-                    that.hasAgree = true;
-                },
-                fail(err){
-                    console.log(err)
-                    that.hasAgree = false;
-                }
-            })
+        wx.getUserInfo({
+            success: function(res) {
+                console.log(res)
+                getApp().globalData.login = 1
+                that.hasAgree = true;
+            },
+            fail(err){
+                console.log(err)
+                that.hasAgree = false;
+            }
+        })
 
     },
 }

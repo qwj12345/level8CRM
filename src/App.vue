@@ -47,8 +47,7 @@ export default {
                       
                       if(res.data.status === 0){
                         wx.setStorageSync('token', res.data.token);
-                        // let url = encodeURIComponent('http://192.168.65.235:9090/wxmail/saveUserInfo')
-             
+                        // 公众号
                         wxRequest('miniProgram/api/haveOpenidGzh',{data:{token:res.data.token}}).then(res1 => {
                             console.log('res1',res1)  
                             if(res1.data.status===0){                
@@ -101,6 +100,7 @@ export default {
   -webkit-transition: width 2s;
   -o-transition: width 2s;
 }
+ 
 /* page{
   background: rgba(244, 240, 240, 0.79);
 } */

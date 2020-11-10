@@ -17,7 +17,7 @@
         <!-- 中奖通告 -->
         <div class="notice">
             <div class="gift-icon"><img src="https://level8cases.oss-cn-hangzhou.aliyuncs.com/e3fcac4d-bf8c-4e1b-bc31-d52fd5702f12.png"/></div>
-            <swiper class='lottery-swiper' autoplay="true" :vertical='true' :circular='true' interval='4000'>
+            <swiper class='lottery-swiper' autoplay="true" :vertical='true' :circular='true' interval='4000' :current='swiperIdNotice'>
                 <block v-for="(item,key) in notices" :key="key">
                     <swiper-item >
                         中奖通知：{{item}}
@@ -104,6 +104,7 @@ import {wxRequest} from '@/components/common'
 export default {
     data(){
         return{
+            swiperIdNotice:0,
             swiperId:0,
             integralNum:0,//积分
             lotteryNum:0,//抽奖次数
@@ -130,7 +131,7 @@ export default {
                 {type:'三等奖',info:'地平线8号七巧收纳包4件套',img:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/1b2050d3-45e1-4e4a-9cd2-a562eb541f93.png'},
                 ]      
             ],
-            trophyGrace:['特等奖','一等奖','二等奖','三等奖','四等奖','五等奖']
+            trophyGrace:['特等奖','一等奖','二等奖','三等奖','四等奖','五等奖','六等奖']
         }
     },
 
@@ -154,7 +155,7 @@ export default {
         goLottery(){
             // 箱子开始移动
             if(!this.moveTrunk && !this.noLottery){
-                this.machineImg = 'https://level8cases.oss-cn-hangzhou.aliyuncs.com/f96b0866-ae3e-4d88-860a-266287dbdf1e.png';      
+                this.machineImg = require('../../../static/images/machine2.png');      
                 this.btnImg = require('../../../static/images/after_lottery_btn.png');
                 this.moveTrunk = true;
                 let animation1  = null;
@@ -165,7 +166,7 @@ export default {
                 }, 300);
                 setTimeout(() => {
                     animation2 = setInterval(() => {
-                        this.machineImg = 'https://level8cases.oss-cn-hangzhou.aliyuncs.com/f96b0866-ae3e-4d88-860a-266287dbdf1e.png';    
+                        this.machineImg = require('../../../static/images/machine2.png');  
                     },300);
                 },150)
 
@@ -272,39 +273,43 @@ export default {
         },
         getNotice(){
             this.notices = [];
-            wxRequest('/miniProgram/api/trophy/someUser/list',{data:{}}).then(res => {
-                    console.log('nn',res)
+            wxRequest('/miniProgram/api/trophy/someUser/list',{data:{token:wx.getStorageSync('token')}}).then(res => {
                 res.data.data.forEach(item => {
-                    this.notices.push(`${item.userName}抽到了${item.trophyName}`)
+                    // this.$nextTick(()=>{
+                        this.notices.push(`${item.userName}抽到了${item.trophyName}`);
+                    // })
                 })
+                this.notices = [...this.notices];//防止没有渲染 
+
             })
         },
         getGifts(){
-
+            this.swiperId = 0;
             this.gifts = [];
-            wxRequest('/miniProgram/api/trophy/trophyList',{data:{}}).then(res => {
-                console.log('show',res)
+            wxRequest('/miniProgram/api/trophy/trophyList',{data:{token:wx.getStorageSync('token')}}).then(res => {
                 let giftNum = res.data.data.length;
                 let index = 0;
                 for(let i=1;i<=giftNum;i++){
-                    
                     if(i%3===0){
-                        this.gifts.push(res.data.data.slice(index,i));
+                        // this.$nextTick(()=>{
+                            this.gifts.push(res.data.data.slice(index,i));
+                        // })
                         index=i;
                     }
-                    if(giftNum%3!==0 && i === (giftNum-1)){
-                        
+          
+                    if(giftNum%3!==0 && i === giftNum){//i === (giftNum-1)判断是不是遍历到最后一个了   
                         let appendNum = 3-giftNum%3;
                         let lastArray = res.data.data.slice(index);
 
                         for(let j=0;j<appendNum;j++){
                             lastArray.push({show:'visibility:hidden'})
                         }
-                        this.gifts.push(lastArray); 
+                        this.$nextTick(()=>{
+                            this.gifts.push(lastArray); 
+                        })
                     }
-
                 } 
- 
+                this.gifts = [...this.gifts]//防止没有渲染
             })
         }
     },
@@ -313,7 +318,6 @@ export default {
         wx.showShareMenu({
             withShareTicket: true
         }) 
-
     },
     onShow(){
         let pages = getCurrentPages();

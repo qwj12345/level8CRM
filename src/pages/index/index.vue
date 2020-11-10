@@ -21,27 +21,35 @@
     <!-- 主页的主要内容 -->
     <div class="container">
       <div class="register">
-        <!-- https://level8cases.oss-cn-hangzhou.aliyuncs.com/a0d3ceb3-53ee-4a1d-9187-e22f58b61c90.jpg -->
+        <!-- https://level8cases.oss-cn-hangzhou.aliyuncs.com/a0d3ceb3-53ee-4a1d-9187-e22f58b61c90.jpg  -->
         <!-- https://level8cases.oss-cn-hangzhou.aliyuncs.com/53b1c1ef-626d-4209-af0e-3e17e4125042.png -->
         <img class="register-img" src="https://level8cases.oss-cn-hangzhou.aliyuncs.com/09105f94-049c-485a-bf54-d872deec06eb.png" mode="widthFix" @click="goReport"/>
       </div>
       <!-- 主页功能模块 -->
       <div class="blocks">
-        <div class="container-block" v-for="(item,key) in blocks" :key="key"  @click="goPage(item.url)">
-          <div class="block-img">
-            <img :src="item.icon"/>
+        <div style=" width: 49%;margin-bottom: 10px;" v-for="(item,key) in blocks" :key="key"  @click="goPage(item.url)">
+          <div class="container-block" v-if="key!==4||showQM">
+            <div class="block-img">
+              <img :src="item.icon"/>
+            </div>
+            <div>
+              {{item.text}}
+            </div>
+            <div class="block-info" v-if="key === 3">一键升级会员</div>
           </div>
-          <div>
-            {{item.text}}
-          </div>
-          <div class="block-info" v-if="key === 0">绑定产品中奖率更高</div>
         </div>
       </div>
     </div>
+    
     <!--  -->
       <div class="official-account">
         <official-account @load="officialLoad" @error='errorLoad'></official-account>
       </div>
+    <!-- 活动 -->
+    <div id="fixed-btn" :style="{transform:rotateDeg}"  @click="goPage('/pages/inviteList/main')">
+      <img src="https://level8cases.oss-cn-hangzhou.aliyuncs.com/fixed_icon-19bb5c83-9ddc-4a7d-858d-9109334f9c77.png">
+    </div>
+
     <!--  -->
     <modal :showModal="showModal" @modalShow='getModal' @refuseModal='refuseAgree'></modal>
     <!-- 授权弹出框 -->
@@ -61,11 +69,11 @@
           </div>
         </div>
     </van-popup>
-    <!--  -->
+    <!--     -->
     <van-popup :show="showMsg" custom-class="popup-class3" >
       <div class="modal3">
         <div class='reg-text3 text-center'>
-            尊敬的用户，您仍可浏览地平线8号的会员中心页面及独家精选内容。但暂不能参与任何有关出发币的活动，谢谢！
+            {{modelText}}
         </div>
         <div class="reg-button" @click="hideMsg">
           确定
@@ -86,13 +94,19 @@ export default {
     return {
       showMsg:false,
       imgUrls:[],
-      blocks:[{text:'幸运转盘',icon:require('../../../static/images/zp.png'),url:'/pages/lottery/main'},{text:'出发币兑换',icon:require('../../../static/images/jf.png'),url:'/pages/integral/main'},{text:'最新消息',icon:require('../../../static/images/message.png'),url:'/pages/newmsg/main?type=0'},{text:'补码申请',icon:require('../../../static/images/zjf.png'),url:'/pages/complement/main'}],
+      blocks:[{text:'出发币获取',icon:require('../../../static/images/hqcfb.png'),url:'/pages/integral/main'},{text:'出发币兑换',icon:require('../../../static/images/jf.png'),url:'/pages/integral/main?type=1'},{text:'会员来抽奖',icon:require('../../../static/images/zp.png'),url:'/pages/lottery/main'},{text:'关注公众号',icon:require('../../../static/images/wx.png'),url:'alert'},{text:'券码核销',icon:require('../../../static/images/hx.png'),url:'/pages/verification/main'}],
       swiperIndex:0,
       showModal:false,
       showModal2:false,
       checkedRule:true,
       hasAgree:false,
-      integralNum:0
+      integralNum:0,
+      showQM:false,
+      rotateDeg:'',
+      timer1:null,
+      timer2:null,
+      modelText:'',
+      animation:{}
     }
   },
   components: {
@@ -105,25 +119,17 @@ export default {
     },
     getPhone(){
       this.showModal = true;
-
     },
     getUserInfo(e){
-      console.log('user',e)
       if (e.mp.detail.rawData){
-        let rawData =  JSON.parse(e.mp.detail.rawData)
-       
+        let rawData =  JSON.parse(e.mp.detail.rawData);
         this.showModal = true; 
         this.hasAgree = true;
-        getApp().globalData.login = 1; //保存用户登录状态
-        // 获取token
-
+        getApp().globalData.login = 1; //保存用户登录状态  
       } else {  
         this.showModal2 = true;
         console.log('用户按了拒绝按钮')
       }
-    },
-    joinChat(e){
-      console.log(e)
     },
     hideModal(){
       this.showModal2 = false;
@@ -131,56 +137,63 @@ export default {
     cancelModal2(){
       this.showModal2 = false;
     },
-
-    // modal组件中的值传过来
+    // modal组件中的值传过来    
     getModal(e){
       this.showModal = e.showModal;
       let data = {
         token:wx.getStorageSync('token')
       }
       wxRequest('/miniProgram/api/user/info',{data:data}).then(res => {
-        console.log(555,res)
+        getApp().globalData.isQrcodeCheckUser = res.data.data.isQrcodeCheckUser;
+        getApp().globalData.isQrcodeCheckUser===1?this.showQM=true:this.showQM=false;
         this.integralNum = res.data.data.integralNum;
         getApp().globalData.integralNum = this.integralNum;
       })
     },
     refuseAgree(e){
       this.showModal = false;
+      this.modelText = '尊敬的用户，您仍可浏览地平线8号的会员中心页面及独家精选内容。但暂不能参与任何有关出发币的活动，谢谢！';
       this.showMsg = true;
     },
     hideMsg(){
       this.showMsg = false;
     },
-    // swiper改变时的事件
+    // swiper改变时的事件  
     changeSwiper(e){
       this.swiperIndex = e.mp.detail.current;
     },
-    // modal点击事件
+    // modal点击事件 
     clickModal(){
       this.showModal = false;
     },
     goPage(item,name){
-      console.log()
       if(item !== '' && item !== undefined){
-        if(this.hasAgree === true){   //先判断有没有授权
-          if(getApp().globalData.phone === 1){ //再判断有没有绑定手机
-            if(item === '/pages/report/main')
+        if(this.hasAgree === true){   //先判断有没有授权  
+          if(getApp().globalData.phone === 1){ //再判断有没有绑定手机  
+             if(item === '/pages/report/main'){
               wx.switchTab({
                 url:item
               })
-              else if(name === '38'){
-                  let url = encodeURIComponent(item)
-                  console.log(item)
-                  wx.navigateTo({
-                      url:'/pages/articledetail/main?url='+url
-                  })
-              }
-            else{
+            }else if(item === 'alert'){
+              this.modelText = '关注“地平线8号”公众号，可获赠200出发币，且自动升级为L1新8会员！';
+              this.showMsg = true;
+            }else if(name === 'shop'){
+              wx.navigateToMiniProgram({
+                appId: 'wx80a0130b2422a4db',
+                path:item,
+                envVersion: 'release',
+                success(res) {
+                  console.log(res)
+                },
+                fail(res){
+                  console.log(res)
+                }
+              })
+            }else{
               wx.navigateTo({
                 url:item
               })  
             }
-        
           }else{
             this.showModal = true;
           }
@@ -189,7 +202,6 @@ export default {
         }
       }
     },
-
     goReport(){
       wx.switchTab({
         url:'/pages/report/main'
@@ -199,16 +211,17 @@ export default {
       console.log('official',e)
     }
   },
-      onShareAppMessage(res) {
-        //转发时携带 shareTicket才能在回调中获取到shareTickets
-        wx.showShareMenu({
-            withShareTicket: true
-        }) 
-
-    },
+  onShareAppMessage(res) {
+    //转发时携带 shareTicket才能在回调中获取到shareTickets 
+    wx.showShareMenu({
+        withShareTicket: true
+    }) 
+  },
   onShow(){
-      console.log(123,wx.getStorageSync('token'))
-     //在saveUser接口中会把积分传给getApp().globalData.integralNum
+    // this.$root.$mp.page.getTabBar().setData({
+    //     activeIndex: 0 //对应页面的index
+    // })
+     //在saveUser接口中会把积分传给getApp().globalData.integralNum 
     // 获取积分
     if(getApp().globalData.integralNum === undefined && wx.getStorageSync('token') !==''){
       let data = {
@@ -216,39 +229,86 @@ export default {
       }
       wxRequest('/miniProgram/api/user/info',{data:data}).then(res => {
         this.integralNum = res.data.data.integralNum;
+        getApp().globalData.isQrcodeCheckUser = res.data.data.isQrcodeCheckUser;
         getApp().globalData.integralNum = this.integralNum;
+        getApp().globalData.isQrcodeCheckUser===1?this.showQM=true:this.showQM=false;
       })
     }else if( wx.getStorageSync('token') ===''){
-      this.integralNum = 0
+      this.integralNum = 0;
     }else{
       this.integralNum = getApp().globalData.integralNum;
     }
     
-    // 判断用户是否登录，如果是就根据hasAgree字段判断显示用户头像和昵称，并且隐藏modal
+    // 判断用户是否登录，如果是就根据hasAgree字段判断显示用户头像和昵称，并且隐藏modal 
     if(getApp().globalData.login === 1){
         this.hasAgree = true;
         this.showModal2 = false;
       }
       if(getApp().globalData.phone === 1){
-        this.showModal = false;        
+        this.showModal = false; 
       }
+      // 是否有酒店自助餐核销权利  
+      getApp().globalData.isQrcodeCheckUser===1?this.showQM=true:this.showQM=false;
+
+      // 右下角图标动画效果
+      // let animation1 = wx.createAnimation({
+      //   duration: 1300,
+      //   timingFunction: "linear",
+      //   delay: 0
+      //  });
+
+      // animation1.rotate('20').step().rotate('-20').step();
+      //  this.animation = animation1.export()
+      // let next = true;
+      // 连续动画关键步骤
+      // setInterval(function () {
+      //   if (next) {
+      //     animation1.rotate('20').step()   
+      //     next = !next;
+      //   } else {
+      //     animation1.rotate('-20').step()
+      //     next = !next;
+      //   }
+      //   this.animation = animation1.export()
+      // }.bind(this), 1300)
+   
+      this.rotateDeg = "";
+      this.timer1 = setInterval(() => {
+        this.rotateDeg = 'rotate(20deg)';
+      }, 1300);
+
+      setTimeout(() => {
+        this.timer2 = setInterval(() => {
+          this.rotateDeg = 'rotate(-20deg)';
+        }, 1300);
+      }, 650);
   },
-  
+  // 清除定时器 
+  onHide(){
+    clearInterval(this.timer1);
+    clearInterval(this.timer2);
+  },
   onLoad (query) {
-    getApp().globalData.invitationCode = query.code;
-    console.log('code',getApp().globalData.invitationCode)
-    let that = this;
+    getApp().globalData.discountCode = query.discountCode;
+    getApp().globalData.invitationCode = query.code;//邀请码进来 
+    let that = this;   
+    wx.showLoading({
+        title:"请稍后",
+        mask:true
+    })
     // 获取轮播图
     wxRequest('/miniProgram/api/img/list2',{data:{}}).then(res => {
+      wx.hideLoading();
       this.imgUrls = [];
-      
       let imgUrls = JSON.parse(res.data.data);
+
       for(let imgUrl in imgUrls){
+        imgUrls[imgUrl].address = imgUrls[imgUrl].address.replace(/\s+/g,"");
         this.imgUrls.push(imgUrls[imgUrl])
       }
     })
-    // 因为如果只在APP.vue中请求一次的话会出现异步的问题，就是这个onLoad比APP.vue中的onLoad先执行完
-    wx.getUserInfo({
+    // 因为如果只在APP.vue中请求一次的话会出现异步的问题，就是这个onLoad比APP.vue中的onLoad先执行完   
+    wx.getUserInfo({  
       success: function(res) {
           console.log(res)
           getApp().globalData.login = 1
@@ -259,16 +319,12 @@ export default {
           that.hasAgree = false;
       }
     })
-
-
   },
-
 }
 </script>
 
 <style>
 @import url('../../components/common.css');
-
 .swiper{
   width:90vw;
   height: 42.75vw;
@@ -330,7 +386,7 @@ img{
 }
 .block-info{
   position: absolute;
-  bottom: 8%;
+  bottom: 13%;
   font-size: 11px;
   width: 100%;
   left: 0;
@@ -338,9 +394,7 @@ img{
   color:rgb(235, 105, 18)
 }
 .container-block{
-  width: 49%;
   height: 25vw;
-  margin-bottom: 10px;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -388,5 +442,13 @@ img{
     line-height: 46px;
     text-align: center;
     border-top: 1px solid #cecece;
+}
+#fixed-btn{
+  position: fixed;
+  right: 18px;
+  bottom: 16px;
+  width: 46px;
+  height: 46px;
+  transition: all 0.5s linear;
 }
 </style>

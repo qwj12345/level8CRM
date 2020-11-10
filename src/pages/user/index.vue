@@ -67,9 +67,10 @@ export default {
             operates:[
               {title:'我的信息',url:'/pages/myinfo/main',img:require('../../../static/images/wdxx.png')},
               {title:'我的产品',url:'/pages/products/main',img:require('../../../static/images/wdcp.png')},
+              {title:'我的订单',url:'/pages/ticketsList/main',img:require('../../../static/images/wddd.png')},
               {title:'出发币记录',url:'/pages/record/main',img:require('../../../static/images/dhjl.png')},
-              {title:'会员手册',url:'/pages/viprule/main',img:require('../../../static/images/jfgz.png')},
-              {title:'隐私条款',url:'/pages/conceal/main',img:require('../../../static/images/ystk.png')},
+              // {title:'会员手册',url:'/pages/viprule/main',img:require('../../../static/images/jfgz.png')},
+              {title:'会员手册',url:'/pages/rules/main',img:require('../../../static/images/ystk.png')},
               ],
             showModal:false,
             showModal2:false,
@@ -87,7 +88,6 @@ export default {
         this.showModal2 = true;
       },
       getUserInfo(e){
-       
         if (e.mp.detail.rawData){
           let rawData =  JSON.parse(e.mp.detail.rawData)
           console.log(rawData)
@@ -97,12 +97,13 @@ export default {
           // 获取token
           getToken(e.mp.detail.encryptedData,e.mp.detail.iv).then(res => {
             console.log('token',res)
-            // 获取积分
+            // 获取积分  
             let data = {
               token:wx.getStorageSync('token')
             }
             wxRequest('/miniProgram/api/user/info',{data:data}).then(res => {
               this.integralNum = res.data.data.integralNum;
+              getApp().globalData.isQrcodeCheckUser = res.data.data.isQrcodeCheckUser;
             })
             // 存储头像和姓名
             saveUser(rawData.nickName,rawData.avatarUrl,rawData.gender)
@@ -178,7 +179,7 @@ export default {
       if(getApp().globalData.phone === 1){
         this.showModal = false;        
       }
-
+      
     },
     onLoad () {
         let that = this;
@@ -186,7 +187,6 @@ export default {
         //----------登录----------------
         wx.getUserInfo({
             success: function(res) {
-                
                 getApp().globalData.login = 1
                 that.hasAgree = true;
             },

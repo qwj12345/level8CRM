@@ -71,6 +71,9 @@ export default {
                 })
              
             }else{
+                wx.showLoading({
+                    title:"请稍后"
+                })
                 let data = {
                     token:wx.getStorageSync('token'),
                     goodsCode:this.uid,
@@ -105,7 +108,7 @@ export default {
 
                     }
                     this.showModal = true;
-
+                    wx.hideLoading()
                 })
                 // this.showModal = true;
             }

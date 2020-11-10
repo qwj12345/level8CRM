@@ -31,7 +31,6 @@
     </div>
     <div class="font13 marginTop10">
     2）注册会员：授权登录“地平线8号会员中心”成为会员，即可获得100 个出发币。
-
     </div>
     <div class="font13 marginTop10">
     3）完善信息：完善基础信息，即可获得 50 个出发币。
@@ -74,7 +73,7 @@
     </div>
     <div class="font13 marginTop10">
     3）出发币兑换礼品：地平线8号提供丰富的礼品供会员兑换，具体可前往“出发币兑换”页面进行查看。
-
+    
     </div>
 
     <div class="bold font14 marginTop10">二、地平线 8 号会员福利</div>
@@ -93,12 +92,24 @@
     <div class="font13 marginTop10">
     5、生日福利
     </div>
+    <div style="margin:10px 0 6px;text-align:center;font-size:26rpx">地平线8号会员特权</div>
+    <img @click="prevImg('https://level8cases.oss-cn-hangzhou.aliyuncs.com/74BC9BEB-19A7-49ba-A4EF-D8E0ADF529B6-fcf92d42-d358-41a7-8fe4-f4c9e44cac49.png')" src="https://level8cases.oss-cn-hangzhou.aliyuncs.com/74BC9BEB-19A7-49ba-A4EF-D8E0ADF529B6-fcf92d42-d358-41a7-8fe4-f4c9e44cac49.png" mode="widthFix"/>
+    <div style="margin:10px 0 6px;text-align:center;font-size:26rpx">地平线8号会员中心出发币赚取规则</div>
+    <img @click="prevImg('https://level8cases.oss-cn-hangzhou.aliyuncs.com/6512BE80-FCD3-4888-AB00-20D8505A8C92-b281ec3a-f31b-4975-9ddc-2cd1e4251187.png')" src="https://level8cases.oss-cn-hangzhou.aliyuncs.com/6512BE80-FCD3-4888-AB00-20D8505A8C92-b281ec3a-f31b-4975-9ddc-2cd1e4251187.png" mode="widthFix"/>
   </div>
 </template>
 
 <script>
 export default {
-
+    methods: {
+        prevImg(e){
+            console.log(e)
+            wx.previewImage({
+                //当前显示图片
+                urls: [e]
+            })
+        },
+    },
 }
 </script>
 

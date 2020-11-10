@@ -6,7 +6,7 @@
       
       <div style="width:90vw;margin:10px auto 20px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px">
-            <div style="color:#000;font-size:18px">兑换码：<span style="font-weight:bold">{{changeCode}}</span></div>
+            <div style="color:#000;font-size:18px">兑换码：<span style="font-weight:bold">{{exchangeCode}}</span></div>
             <div style="font-size:14px;color:#000;padding: 4px 10px;background:#FFD637;border-radius:18px" @click="copyNumber">复制兑换码</div>
       </div>
           <div v-html="infoHtml"></div>
@@ -21,13 +21,13 @@ export default {
     data() {
         return {
             infoHtml:'',
-            changeCode:'12465465'
+            exchangeCode:'12465465'
         }
     },
     methods: {
         copyNumber(){
             wx.setClipboardData({
-                data: this.changeCode,
+                data: this.exchangeCode,
                 success: function () {
                     // 添加下面的代码可以复写复制成功默认提示文本`内容已复制` 
                     wx.showToast({
@@ -43,8 +43,8 @@ export default {
     },
     onLoad(query){
         this.infoHtml = decodeURIComponent(query.exchangeInfo);
-        this.changeCode = query.exchangeCode;
-        console.log(this.changeCode)
+        this.exchangeCode = query.exchangeCode;
+        console.log(this.exchangeCode)  
     }
 }
 </script>

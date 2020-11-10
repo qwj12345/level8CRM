@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText":"邀请有礼",
+    "usingComponents": {
+        "van-popup": "../../../static/vant/popup/index"
+      }
+}

@@ -53,7 +53,6 @@
                             <div style="height:6px;position:fixed;top:0"></div>
                             <div v-for="(item,key) in options" :key="key" @click="choosePosition(item)">{{item.goodsName}}</div>
                         </div>
-
                     </div>
                 </div>
                 <div class="upload-item" v-if="info!==''">
@@ -76,8 +75,7 @@
                 <div class="input-item">
                     <div class="input-title">平台订单号</div>
                     <div class="sel-input" >
-                        <input v-model="number" type="number" style="width:100%"/>
-
+                        <input v-model="number" type="number" style="width:100%"/> 
                     </div>
                 </div>
                 <div class="upload-item">
@@ -120,7 +118,6 @@
                         </div>
                         <div style="width:20px" :class="{'openIcon':item.open}">
                             <img   src="../../../static/images/face-right.png" mode='widthFix'/>
-
                         </div>
                     </div>
                 </div>

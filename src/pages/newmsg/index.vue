@@ -21,7 +21,7 @@
                   <div>阅读原文</div>
                   <div class="msg-right">
                     <div class="right-padding-r" v-if="item.forwardFlag===0">
-                        分享即得<span class="right-text-num">{{item.integralNum}}个</span>出发币
+                        分享到群得<span class="right-text-num">{{item.integralNum}}个</span>出发币
                     </div>
                     <div class="go-detail-img">
                         <img src="/static/images/face-right.png"/>
@@ -79,7 +79,7 @@ export default {
                     item.releaseTime = timeFormat1(item.releaseTime);
                 })
                 this.messages = this.messages.concat(res.data.data.content);
-                this.totalPage = Math.ceil(res.data.data.total/this.size);
+                this.totalPage = res.data.data.totalPages;
                 wx.hideLoading();
             })
         }

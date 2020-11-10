@@ -4,27 +4,30 @@
     <card :hasAgree='hasAgree' @login="Login" :integral="integralNum"></card>
     <!-- 会员福利列表 -->
     <div class="lists">
-      <div class="list-item" v-for="(item,key) in lists" :key='key' @click="goPage(item)">
-        <!-- left -->
-        <div class="item-left">
-          <div class="item-img">
-            <img :src="item.image" mode="widthFix"/>
+      <div  v-for="(item,key) in lists" :key='key' @click="goPage(item)">
+        <div class="list-item" v-show="key!==0||showTicket">
+          <div class="item-icon" v-if="key === 0"><img src="/static/images/hot.png" mode="widthFix"/></div>
+          <!-- left -->
+          <div class="item-left">
+            <div class="item-img">
+              <img :src="item.image" mode="widthFix"/> 
+            </div>
+            <div class="item-left-content">
+              <div class="left-title">{{item.title}}</div>
+              <div class="left-content" v-html="item.text">{{item.text}}</div>
+            </div>
           </div>
-          <div class="item-left-content">
-            <div class="left-title">{{item.title}}</div>
-            <div class="left-content" v-html="item.text">{{item.text}}</div>
+          <!-- right -->
+          <div class="item-right">
+            <img src="/static/images/face-right.png" />
           </div>
-        </div>
-        <!-- right -->
-        <div class="item-right">
-          <img src="/static/images/face-right.png" />
         </div>
       </div>
     </div>
 
     <modal :showModal="showModal" @modalShow='getModal' @refuseModal='refuseAgree'></modal>
     
-    <!-- 授权弹出框 -->
+    <!-- 授权弹出框  -->
     <van-popup :show="showModal2" custom-class="popup-class" >
         <div class="modal2">
           <div class="reg-title">
@@ -45,7 +48,7 @@
     <van-popup :show="showMsg" custom-class="popup-class3" >
       <div class="modal3">
         <div class='reg-text3 text-center'>
-            尊敬的用户，您仍可浏览地平线8号的会员中心页面及独家精选内容。但暂不能参与任何有关出发币的活动，谢谢！
+            {{modelText}}
         </div>
         <div class="reg-button" @click="hideMsg">
           确定
@@ -59,27 +62,31 @@
 import modal from '@/components/modal'
 import card from '@/components/card'
 import global from '@/components/global'
-import {getToken,saveUser,wxRequest} from '@/components/common'
-
+import {getToken,saveUser,wxRequest} from '@/components/common' 
 
 export default {
   data(){
       return{
+        modelText:'',
         showMsg:false,
         integralNum:0,
         num:0,
         lists:[
-          {title:'获取出发币',text:'点击查看出发币获取方式',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/6394f65a-0a26-4eae-bce1-75290f4da061.png',url:'/pages/integral/main'},
-          {title:'会员抽奖',text:'每天都能免费抽取地平线8号周边噢<br/>每月8日中奖概率翻倍！',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/9e09da72-2f4e-410f-85cf-cb3df7561d9c.png',url:'/pages/lottery/main'},
-          {title:'独家精选',text:'独家精选内容都在这里',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/cdb4648b-59dd-48de-b310-45d4961b7c95.png',url:'/pages/newmsg/main?type=1'},  
-          {title:'新品发布会',text:'诚意邀请您前来参与我们新品发布会',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/e389853c-f52e-40de-943f-954f05c9baa4.png',url:'/pages/comingsoon/main'},  
-          {title:'产品体验官',text:'免费申请产品，写出你的独特体验',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/371f68a8-a7c3-4d34-8fd7-f17128df67db.png',url:'/pages/joinChat/main'},  
-          {title:'生日福利',text:'收下您的专属福利吧~',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/3659d0ac-a26a-4831-b18b-a29aea210baf.png',url:'/pages/comingsoon/main'},
-          
+          {title:'酒店自助餐',text:'超值福利，五星酒店自助餐超低会员价出发币可抵现金',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/tickets-a1d65e34-1d0a-420b-8574-5397e21ce3d6.png',url:'/pages/tickets/main'},
+          {title:'出发币兑换',text:'8号会员日，出发币兑换开放日',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/矩形19-be702e1d-74b0-4e48-8702-98933895b1f9.png',url:'/pages/integral/main?type=1'},
+          {title:'出发币换购',text:'出发币当钱花，惊喜优惠价换购正品好物',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/椭圆10拷贝-3e4ebf1e-dd53-4cf2-a5fc-0a3d57c2e774.png',url:'/pages/comingsoon/main'},
+          {title:'邀请好友',text:'最高可赚5000出发币！',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/邀请好友-a8ec0d2c-3632-43e6-b850-3a0681b7546e.png',url:'/pages/inviteList/main'},
+          {title:'邀请赠礼',text:'每月惊喜不停歇，分享即领多重好礼',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/图层1-30a995de-5e99-48ae-a18b-c32565667ab2.png',url:'/pages/inviteGiftList/main'},  
+          {title:'关注公众号',text:'自动升级L1新8会员，送200出发币',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/公众号(1)-f78beee6-b59a-4b92-b361-e0c24bef0a2c.png',url:'alert'},  
+          {title:'独家精选',text:'单篇精选内容分享最高可赚50出发币',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/图层3-3bf34471-90dd-4c60-a40b-7097613cefc7.png',url:'/pages/newmsg/main?type=1'},  
+          {title:'报名摇奖',text:'惊喜好物上线，0元报名定时开奖',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/抽奖(1)-edbcadad-8120-4340-a250-4e78929f7c44.png',url:'/pages/casino/main'},
+          {title:'产品体验官',text:'免费申请产品使用，写出你的独特体验',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/图层5-86e14a51-8c19-4723-9a04-74f408055c6c.png',url:'/pages/comingsoon/main'},
+          {title:'进粉丝群',text:'隐形福利，专享特权通通在这里',image:'https://level8cases.oss-cn-hangzhou.aliyuncs.com/组17-765bbff4-e4c0-40db-84b0-bca9bd34f7d0.png',url:'/pages/joinChat/main'},
         ],
         hasAgree:false,
         showModal:false,
-        showModal2:false
+        showModal2:false,
+        showTicket:false
       }
   },
   components: {
@@ -97,7 +104,7 @@ export default {
         console.log(rawData)
         this.showModal = true; 
         this.hasAgree = true;
-        getApp().globalData.login = 1; //保存用户登录状态
+        getApp().globalData.login = 1; //保存用户登录状态  
         // wx.setStorageSync('login', '1');
         // 获取token
         getToken(e.mp.detail.encryptedData,e.mp.detail.iv).then(res => {
@@ -108,7 +115,7 @@ export default {
           }
           wxRequest('/miniProgram/api/user/info',{data:data}).then(res => {
             this.integralNum = res.data.data.integralNum;
-            console.log(this.integralNum)
+            getApp().globalData.isQrcodeCheckUser = res.data.data.isQrcodeCheckUser;
           })
           // 存储头像和姓名
           saveUser(rawData.nickName,rawData.avatarUrl,rawData.gender)
@@ -130,6 +137,7 @@ export default {
     },
     refuseAgree(e){
       this.showModal = false;
+      this.modelText = '尊敬的用户，您仍可浏览地平线8号的会员中心页面及独家精选内容。但暂不能参与任何有关出发币的活动，谢谢！';
       this.showMsg = true;
     },
     hideMsg(){
@@ -143,15 +151,17 @@ export default {
             url:'/pages/webpage/main?url='+url
         })
       }
-      if(this.hasAgree === true){   //先判断有没有授权
-        if(getApp().globalData.phone === 1 && item.url !== '/pages/newmsg/main?type=1'){ //再判断有没有绑定手机
-          wx.navigateTo({
-            url:item.url
-          })
-        }else if(item.url === '/pages/newmsg/main?type=1'){
-          wx.navigateTo({
-            url:item.url
-          })
+      if(this.hasAgree === true){   //先判断有没有授权  
+        if(getApp().globalData.phone === 1){ //再判断有没有绑定手机
+          if(item.url === 'alert'){
+              this.modelText = '关注“地平线8号”公众号，可获赠200出发币，且自动升级为L1新8会员！';
+              this.showMsg = true;
+            }else{
+              wx.navigateTo({
+                url:item.url
+              })
+            }
+          
         }else{
           this.showModal = true;
         }
@@ -168,7 +178,7 @@ export default {
 
     },
   onShow(){
-    console.log(88,getApp().globalData.integralNum)
+
     if(getApp().globalData.integralNum !== undefined)
       this.integralNum = getApp().globalData.integralNum;
 
@@ -179,23 +189,30 @@ export default {
       if(getApp().globalData.phone === 1){
         this.showModal = false;        
       }
+      // 是否有酒店自助餐券模块
+      let data = {
+          discountCode:"",
+          token:wx.getStorageSync('token')
+      }
+      wxRequest('/miniProgram/api/trophy/payTrophyList',{data:data}).then(res => {
+          // this.showTicket = res.data.data.length===0?false:true;
+      })
   },
 
   onLoad () {
       let that = this;
       //----------登录----------------
-
-          wx.getUserInfo({
-              success: function(res) {
-                console.log(res)
-                getApp().globalData.login = 1
-                that.hasAgree = true;
-              },
-              fail(err){
-                console.log(err)
-                that.hasAgree = false;
-              }
-          })
+      wx.getUserInfo({
+          success: function(res) {
+            console.log(res)
+            getApp().globalData.login = 1
+            that.hasAgree = true;
+          },
+          fail(err){
+            console.log(err)
+            that.hasAgree = false;
+          }
+      })
   },
 }
 </script>
@@ -223,6 +240,13 @@ page{
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  position: relative;
+}
+.item-icon{
+  position: absolute;
+  top: -0.5px;
+  left: 10px;
+  width: 18px;
 }
 .item-left{
   display: flex;

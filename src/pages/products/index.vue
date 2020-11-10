@@ -229,7 +229,7 @@ export default {
                     })
                     this.products = [];
                     this.page = 0;
-                    this.getProducts();  //改变一个产品状态后重新获取下产品列表
+                    this.getProducts();  //改变一个产品状态后重新获取下产品列表   
                     this.showGS2 = false;
                 }else{
                     wx.showToast({

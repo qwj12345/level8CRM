@@ -10,6 +10,7 @@ export default {
 }
 </script>
 
+
 <style>
 /* img{
   width: 100vw;
